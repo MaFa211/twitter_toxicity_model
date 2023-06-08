@@ -11,9 +11,9 @@ OUTER_CV = 5
 INNER_CV = 5
 MAX_SEQ_LENGTH = 100
 TARGET_POS_PER_EPOCH = 5000
-NUM_PREFETCH = 5
+NUM_PREFETCH = 5  
 NUM_WORKERS = 10
-LOCAL_DIR = "LOKAL_DIR/models"
+LOCAL_DIR = "LOKAL_DIR/"
 # from settings.default_settings_tox import (
   # INNER_CV,
   # LOCAL_DIR,
