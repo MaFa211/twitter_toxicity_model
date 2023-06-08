@@ -24,7 +24,7 @@ LOCAL_DIR = "/home/mats/Documents/University/4_Semester/SDSProjectsSeminar/the-a
   # TARGET_POS_PER_EPOCH,
 # )
 
-from utils import helpers
+import utils.helpers
 
 
 import numpy as np
