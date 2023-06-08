@@ -21,7 +21,7 @@
 #   print("No HuggingFace package")
 
 import os
-LOCAL_DIR = "/home/mats/Documents/University/4_Semester/SDSProjectsSeminar/the-algorithm/trust_and_safety_models/toxicity/LOKAL_DIR"
+LOCAL_DIR = "LOKAL_DIR/"
 MAX_SEQ_LENGTH = 100
 try:
   from optim import losses

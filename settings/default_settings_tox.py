@@ -17,7 +17,7 @@ else:
     print("Issue at logging time", e)
 
 TRAINING_DATA_LOCATION = f"..."
-GCS_ADDRESS = '/home/mats/Documents/University/4_Semester/SDSProjectsSeminar/the-algorithm/trust_and_safety_models/toxicity/LOKAL_DIR/' 
+GCS_ADDRESS = 'LOKAL_DIR/' 
 LOCAL_DIR = os.getcwd()
 REMOTE_LOGDIR = "{GCS_ADDRESS}/logs"
 MODEL_DIR = "{GCS_ADDRESS}/models"

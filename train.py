@@ -17,7 +17,7 @@ from load_model import load, get_last_layer
 # from toxicity_ml_pipeline.outputs.dataframe_loader import ENLoader, ENLoaderWithSampling
 # from toxicity_ml_pipeline.outputs.mb_generator import BalancedMiniBatchLoader
 # from toxicity_ml_pipeline.load_model import load, get_last_layer
-path = "/home/mats/Documents/University/4_Semester/SDSProjectsSeminar/the-algorithm/trust_and_safety_models/toxicity"
+path = "./"
 LOCAL_DIR = "{path}/LOKAL_DIR"
 REMOTE_LOGDIR = "{LOCAL_DIR}/logs"
 MODEL_DIR = "{LOCAL_DIR}/model"

@@ -3,7 +3,7 @@ import os
 
 import sys
     # caution: path[0] is reserved for script path (or '' in REPL)
-sys.path.insert(1, '/home/mats/Documents/University/4_Semester/SDSProjectsSeminar/the-algorithm/trust_and_safety_models/toxicity')
+sys.path.insert(1, '/kaggle/working')
 from settings.default_settings_tox import REMOTE_LOGDIR
 # from settings.default_settings_abs import LABEL_NAMES
 # from utils.absv_utils import parse_labeled_data
