@@ -13,7 +13,7 @@ MAX_SEQ_LENGTH = 100
 TARGET_POS_PER_EPOCH = 5000
 NUM_PREFETCH = 5
 NUM_WORKERS = 10
-LOCAL_DIR = "/home/mats/Documents/University/4_Semester/SDSProjectsSeminar/the-algorithm/trust_and_safety_models/toxicity/LOKAL_DIR/models"
+LOCAL_DIR = "LOKAL_DIR/models"
 # from settings.default_settings_tox import (
   # INNER_CV,
   # LOCAL_DIR,
