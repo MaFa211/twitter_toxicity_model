@@ -3,7 +3,7 @@ import os
 import random as python_random
 import subprocess
 import os
-LOCAL_DIR = os.getcwd()
+LOCAL_DIR = "/kaggle/working/LOCAL_DIR"
 #from toxicity_ml_pipeline.settings.default_settings_tox import LOCAL_DIR
 
 import numpy as np
