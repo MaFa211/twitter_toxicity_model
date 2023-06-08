@@ -102,8 +102,8 @@ class BalancedMiniBatchLoader(object):
   def _load_tokenizer(self):
     print("Making a local copy of Bertweet-base model")
     local_model_dir = os.path.join(LOCAL_DIR, "models")
-    cmd = f"mkdir {local_model_dir} ; gsutil -m cp -r gs://... {local_model_dir}"
-    execute_command(cmd)
+    cmd = f"mkdir {local_model_dir}" #; gsutil -m cp -r gs://... {local_model_dir}"
+    os.system(cmd)
 
     self.tokenizer = AutoTokenizer.from_pretrained(
       os.path.join(local_model_dir, "bertweet-base"), normalization=True
