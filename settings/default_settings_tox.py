@@ -17,7 +17,7 @@ else:
     print("Issue at logging time", e)
 
 TRAINING_DATA_LOCATION = f"..."
-GCS_ADDRESS = 'LOKAL_DIR/' 
+GCS_ADDRESS = './LOKAL_DIR/' 
 LOCAL_DIR = os.getcwd()
 REMOTE_LOGDIR = "{GCS_ADDRESS}/logs"
 MODEL_DIR = "{GCS_ADDRESS}/models"
