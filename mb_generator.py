@@ -267,7 +267,9 @@ class BalancedMiniBatchLoader(object):
     full_df = self._compute_int_labels(full_df)
 
     train_data, test_data = self.get_outer_fold(df=full_df)
-    val_data, test_data = self.get_outer_fold(df=test_data)
+    # insert manual validation split
+    val_split = int(test_data.shape[0]*0.10)
+    val_data, test_data = test_data.iloc[:val_split, :], test_data.iloc[val_split:, :]
     if test_data.shape[0] == 0:
       test_data = train_data.iloc[:500]
 
