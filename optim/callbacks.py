@@ -63,12 +63,12 @@ class SyncingTensorBoard(tf.keras.callbacks.TensorBoard):
 
   def on_epoch_end(self, epoch, logs=None):
     super().on_epoch_end(epoch, logs=logs)
-    self.synchronize()
+    #self.synchronize()
 
   def synchronize(self):
     base_dir = os.path.dirname(self.log_dir)
-    cmd = f"gsutil -m rsync -r {base_dir} {self.remote_logdir}"
-    execute_command(cmd)
+    #cmd = f"gsutil -m rsync -r {base_dir} {self.remote_logdir}"
+    #execute_command(cmd)
 
 
 class GradientLoggingTensorBoard(SyncingTensorBoard):
