@@ -244,4 +244,4 @@ class AdditionalResultLogger(tf.keras.callbacks.Callback):
     if eval_time == "epoch":
       to_report["epoch"] = step
 
-    wandb.log(to_report, commit=commit)
+#    wandb.log(to_report, commit=commit)
