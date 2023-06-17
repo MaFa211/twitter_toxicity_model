@@ -419,6 +419,7 @@ class Trainer(object):
       "verbose": 2,
     }
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    print(device)
     mb_generator = mb_generator.to(device)
     model = model.to(device)
     model.fit(mb_generator, **training_args)
