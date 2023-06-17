@@ -402,11 +402,11 @@ class Trainer(object):
 
     return model
 
-  def _train_single_fold(self, mb_generator, test_data, steps_per_epoch, fold, val_data=None):
+  def _train_single_fold(self, mb_generator, test_data, steps_per_epoch, fold, val_data):
     steps_per_epoch = 100 if self.test else steps_per_epoch
 
     optimizer, callbacks = self.get_training_actors(
-      steps_per_epoch=steps_per_epoch, val_data=val_data, test_data=test_data, fold=fold
+      steps_per_epoch=steps_per_epoch, val_data=val_data, test_data=test_data, fold=fold, val_data=val_data
     )
     print("Loading model")
     model = self.load_model(optimizer)
@@ -432,11 +432,11 @@ class Trainer(object):
     df = self.preprocess(df=df)
 
     print("Going to train on everything but the test dataset")
-    mini_batches, test_data, steps_per_epoch = self.mb_loader.simple_cv_load(df)
+    mini_batches, test_data, steps_per_epoch, val_data = self.mb_loader.simple_cv_load(df)
     print(f"steps per epoch: f{steps_per_epoch}")
 
     self._train_single_fold(
-      mb_generator=mini_batches, test_data=test_data, steps_per_epoch=steps_per_epoch, fold="full"
+      mb_generator=mini_batches, test_data=test_data, steps_per_epoch=steps_per_epoch, fold="full", val_data=val_data
     )
 
   def train(self):
