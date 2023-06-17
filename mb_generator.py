@@ -3,15 +3,14 @@ import os
 
 # from settings import default_settings_tox
 
-import subprocess
-import numbers
+
 
 WARM_UP_PERC = 0.1
 OUTER_CV = 5
 INNER_CV = 5
 MAX_SEQ_LENGTH = 100
 TARGET_POS_PER_EPOCH = 5000
-NUM_PREFETCH = 5  
+NUM_PREFETCH = 5
 NUM_WORKERS = 10
 LOCAL_DIR = "./LOKAL_DIR"
 # from settings.default_settings_tox import (
@@ -24,7 +23,7 @@ LOCAL_DIR = "./LOKAL_DIR"
   # TARGET_POS_PER_EPOCH,
 # )
 
-import utils.helpers
+from utils import helpers
 
 
 import numpy as np
@@ -35,18 +34,12 @@ import tensorflow as tf
 
 #try:
 from transformers import AutoTokenizer, DataCollatorWithPadding
-from datasets import Dataset
 #except ModuleNotFoundError:
 # print("...")
 # else:
-#   from datasets import Dataset
+from datasets import Dataset
 
 
-def execute_command(cmd, print_=True):
-  s = subprocess.run(cmd, shell=True, capture_output=print_)
-  if print_:
-    print(s.stderr.decode("utf-8"))
-    print(s.stdout.decode("utf-8"))
 
 class BalancedMiniBatchLoader(object):
   def __init__(
@@ -58,8 +51,8 @@ class BalancedMiniBatchLoader(object):
     scope="TOX",
     # project=...,
     dual_head=None,
-    n_outer_splits=OUTER_CV,
-    n_inner_splits=INNER_CV,
+    n_outer_splits=None,
+    n_inner_splits=None,
     sample_weights=None,
     huggingface=False,
   ):
@@ -67,22 +60,21 @@ class BalancedMiniBatchLoader(object):
       raise ValueError("Perc_training_tox should be in ]0; 0.5]")
 
     self.perc_training_tox = perc_training_tox
-    self.n_outer_splits = n_outer_splits
-    # if not n_outer_splits:
-    #   n_outer_splits = OUTER_CVS
-    # if isinstance(n_outer_splits, int):
-    #   self.n_outer_splits = n_outer_splits
-    self.get_outer_fold = self._get_outer_cv_fold
-    #   if fold < 0 or fold >= self.n_outer_splits or int(fold) != fold:
-    #     raise ValueError(f"Number of fold should be an integer in [0 ; {self.n_outer_splits} [.")
+    if not n_outer_splits:
+      n_outer_splits = OUTER_CV
+    if isinstance(n_outer_splits, int):
+      self.n_outer_splits = n_outer_splits
+      self.get_outer_fold = self._get_outer_cv_fold
+      if fold < 0 or fold >= self.n_outer_splits or int(fold) != fold:
+        raise ValueError(f"Number of fold should be an integer in [0 ; {self.n_outer_splits} [.")
 
-    # elif n_outer_splits == "time":
-    #   self.get_outer_fold = self._get_time_fold
-    #   if fold != "time":
-    #     raise ValueError(
-    #       "To avoid repeating the same run many times, the external fold"
-    #       "should be time when test outputs is split according to dates."
-    #     )
+    elif n_outer_splits == "time":
+      self.get_outer_fold = self._get_time_fold
+      if fold != "time":
+        raise ValueError(
+          "To avoid repeating the same run many times, the external fold"
+          "should be time when test outputs is split according to dates."
+        )
       # try:
       #   setting_file = import_module(f"toxicity_ml_pipeline.settings.{scope.lower()}{project}_settings")
       # except ModuleNotFoundError:
@@ -90,12 +82,12 @@ class BalancedMiniBatchLoader(object):
       # self.test_begin_date = setting_file.TEST_BEGIN_DATE
       # self.test_end_date = setting_file.TEST_END_DATE
 
-    # else:
-    #   raise ValueError(
-    #     f"Argument n_outer_splits should either an integer or 'time'. Provided: {n_outer_splits}"
-    #   )
+    else:
+      raise ValueError(
+        f"Argument n_outer_splits should either an integer or 'time'. Provided: {n_outer_splits}"
+      )
 
-    #self.n_inner_splits = n_inner_splits if n_inner_splits is not None else INNER_CV
+    self.n_inner_splits = n_inner_splits if n_inner_splits is not None else INNER_CV
 
     self.seed = seed
     self.mb_size = mb_size
@@ -110,13 +102,11 @@ class BalancedMiniBatchLoader(object):
   def _load_tokenizer(self):
     print("Making a local copy of Bertweet-base model")
     local_model_dir = os.path.join(LOCAL_DIR, "models")
-    if not os.path.exists(local_model_dir):
-      cmd = f"mkdir {local_model_dir}"#; gsutil -m cp -r gs://... {local_model_dir}"
-      execute_command(cmd)
+    cmd = f"mkdir {local_model_dir}" #; gsutil -m cp -r gs://... {local_model_dir}"
+    os.system(cmd)
 
-    # Using transformer base model instead of local model
     self.tokenizer = AutoTokenizer.from_pretrained(
-      "vinai/bertweet-base", normalization=True
+      os.path.join(local_model_dir, "bertweet-base"), normalization=True
     )
 
   def tokenize_function(self, el):
@@ -134,18 +124,17 @@ class BalancedMiniBatchLoader(object):
     return StratifiedKFold(shuffle=True, n_splits=n_splits, random_state=self.seed)
 
   def _get_time_fold(self, df):
-    # test_begin_date = pandas.to_datetime(self.test_begin_date).date()
-    # test_end_date = pandas.to_datetime(self.test_end_date).date()
-    # print(f"Test is going from {test_begin_date} to {test_end_date}.")
-    # test_data = df.query("@test_begin_date <= date <= @test_end_date")
+    test_begin_date = pandas.to_datetime(self.test_begin_date).date()
+    test_end_date = pandas.to_datetime(self.test_end_date).date()
+    print(f"Test is going from {test_begin_date} to {test_end_date}.")
+    test_data = df.query("@test_begin_date <= date <= @test_end_date")
 
-    # query = "date < @test_begin_date"
-    # other_set = df.query(query)
-    return df
+    query = "date < @test_begin_date"
+    other_set = df.query(query)
+    return other_set, test_data
 
   def _get_outer_cv_fold(self, df):
     labels = df.int_label
-    print(self.n_outer_splits)
     stratifier = self._get_stratified_kfold(n_splits=self.n_outer_splits)
 
     k = 0
@@ -159,10 +148,8 @@ class BalancedMiniBatchLoader(object):
 
     return train_data, test_data
 
-  
   def get_steps_per_epoch(self, nb_pos_examples):
     return int(max(TARGET_POS_PER_EPOCH, nb_pos_examples) / self.mb_size / self.perc_training_tox)
-
 
   def make_huggingface_tensorflow_ds(self, group, mb_size=None, shuffle=True):
     huggingface_ds = Dataset.from_pandas(group).map(self.tokenize_function, batched=True)
@@ -259,6 +246,7 @@ class BalancedMiniBatchLoader(object):
 
     train_data, test_data = self.get_outer_fold(df=full_df)
 
+
     stratifier = self._get_stratified_kfold(n_splits=self.n_inner_splits)
     for train_index, val_index in stratifier.split(
       np.zeros(train_data.shape[0]), train_data.int_label
@@ -277,8 +265,9 @@ class BalancedMiniBatchLoader(object):
 
   def simple_cv_load(self, full_df):
     full_df = self._compute_int_labels(full_df)
-    #print(type(self.get_outer_fold(df=full_df)))
+
     train_data, test_data = self.get_outer_fold(df=full_df)
+    val_data, test_data = self.get_outer_fold(df=test_data)
     if test_data.shape[0] == 0:
       test_data = train_data.iloc[:500]
 
@@ -287,7 +276,7 @@ class BalancedMiniBatchLoader(object):
       nb_pos_examples=train_data[train_data.int_label != 0].shape[0]
     )
 
-    return mini_batches, test_data, steps_per_epoch
+    return mini_batches, test_data, steps_per_epoch, val_data
 
   def no_cv_load(self, full_df):
     full_df = self._compute_int_labels(full_df)
