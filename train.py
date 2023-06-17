@@ -406,7 +406,7 @@ class Trainer(object):
     steps_per_epoch = 100 if self.test else steps_per_epoch
 
     optimizer, callbacks = self.get_training_actors(
-      steps_per_epoch=steps_per_epoch, val_data=val_data, test_data=test_data, fold=fold, val_data=val_data
+      steps_per_epoch=steps_per_epoch, val_data=val_data, test_data=test_data, fold=fold
     )
     print("Loading model")
     model = self.load_model(optimizer)
