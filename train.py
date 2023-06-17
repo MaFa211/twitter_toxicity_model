@@ -184,7 +184,7 @@ class Trainer(object):
     )
     self._init_dirnames(kw=kw, experiment_id=experiment_id)
     print("------- Checking there is a GPU")
-    #check_gpu()
+    check_gpu()
 
   def _init_dirnames(self, kw, experiment_id):
     kw = "test" if self.test else kw
@@ -416,9 +416,8 @@ class Trainer(object):
       "callbacks": callbacks,
       "verbose": 2,
     }
-
     model.fit(mb_generator, **training_args)
-    return
+    return model
 
   def train_full_model(self, df):
     print("Setting up random seed.")
