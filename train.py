@@ -418,10 +418,7 @@ class Trainer(object):
       "callbacks": callbacks,
       "verbose": 2,
     }
-    device = "cuda:0" if torch.cuda.is_available() else "cpu"
-    print(device)
-    mb_generator = mb_generator.to(device)
-    model = model.to(device)
+    mb_generator = mb_generator
     model.fit(mb_generator, **training_args)
     return model
 
@@ -436,6 +433,7 @@ class Trainer(object):
 
     print("Going to train on everything but the test dataset")
     mini_batches, test_data, steps_per_epoch = self.mb_loader.simple_cv_load(df)
+    print(f"steps per epoch: f{steps_per_epoch}")
 
     self._train_single_fold(
       mb_generator=mini_batches, test_data=test_data, steps_per_epoch=steps_per_epoch, fold="full"
