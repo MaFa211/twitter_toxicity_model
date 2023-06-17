@@ -116,6 +116,7 @@ class AdditionalResultLogger(tf.keras.callbacks.Callback):
     **kwargs,
   ):
     super().__init__(*args, **kwargs)
+    self.counter = counter
     self.set_ = set_
     if data is None:
       return None    
@@ -144,7 +145,7 @@ class AdditionalResultLogger(tf.keras.callbacks.Callback):
       else:
         self.metric_kw = {'average': None}
 
-      self.counter = counter
+
       self.best_metrics = defaultdict(float)
       self.from_logits = from_logits
       print(f"Loaded callback for {set_}, from_logits: {from_logits}, labels {self.label_names}")
