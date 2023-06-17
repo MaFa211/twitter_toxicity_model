@@ -9,6 +9,7 @@ from data.dataframe_loader import ENLoaderWithSampling, ENLoader
 from utils.helpers import check_gpu, set_seeds
 from mb_generator import BalancedMiniBatchLoader
 from load_model import load, get_last_layer
+import torch
 #from outputs.mb_generator import BalancedMiniBatchLoader
 # from toxicity_ml_pipeline.outputs.data_preprocessing import (
 #   DefaultENNoPreprocessor,
@@ -388,6 +389,7 @@ class Trainer(object):
       content_loss_name=self.content_loss_name,
       content_loss_weight=self.content_loss_weight
     )
+    print(type(model))
 
     if self.model_reload is not False:
       model_folder = upload_model(full_gcs_model_path=os.path.join(self.model_dir, self.model_reload))
@@ -416,6 +418,9 @@ class Trainer(object):
       "callbacks": callbacks,
       "verbose": 2,
     }
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    mb_generator = mb_generator.to(device)
+    model = model.to(device)
     model.fit(mb_generator, **training_args)
     return model
 
