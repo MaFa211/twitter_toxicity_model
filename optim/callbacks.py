@@ -118,6 +118,7 @@ class AdditionalResultLogger(tf.keras.callbacks.Callback):
     super().__init__(*args, **kwargs)
     self.counter = counter
     self.set_ = set_
+    self.data = data
     if data is None:
       return None    
 
