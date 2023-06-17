@@ -119,6 +119,7 @@ class AdditionalResultLogger(tf.keras.callbacks.Callback):
     self.counter = counter
     self.set_ = set_
     self.data = data
+    self.batch_size = batch_size
     if data is None:
       return None    
 
