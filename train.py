@@ -455,7 +455,7 @@ class Trainer(object):
         mb_generator=mb_generator,
         val_data=val_data,
         test_data=test_data,
-        steps_per_epoch=steps_per_epoch,
+        steps_per_epoch=100,
         fold=i,
       )
     else:
