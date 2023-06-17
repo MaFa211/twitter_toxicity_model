@@ -246,6 +246,7 @@ class BalancedMiniBatchLoader(object):
 
     train_data, test_data = self.get_outer_fold(df=full_df)
 
+
     stratifier = self._get_stratified_kfold(n_splits=self.n_inner_splits)
     for train_index, val_index in stratifier.split(
       np.zeros(train_data.shape[0]), train_data.int_label
@@ -266,6 +267,7 @@ class BalancedMiniBatchLoader(object):
     full_df = self._compute_int_labels(full_df)
 
     train_data, test_data = self.get_outer_fold(df=full_df)
+    val_data, test_data = self.get_outer_fold(df=test_data)
     if test_data.shape[0] == 0:
       test_data = train_data.iloc[:500]
 
@@ -274,7 +276,7 @@ class BalancedMiniBatchLoader(object):
       nb_pos_examples=train_data[train_data.int_label != 0].shape[0]
     )
 
-    return mini_batches, test_data, steps_per_epoch
+    return mini_batches, test_data, steps_per_epoch, val_data
 
   def no_cv_load(self, full_df):
     full_df = self._compute_int_labels(full_df)

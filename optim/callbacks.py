@@ -109,7 +109,7 @@ class AdditionalResultLogger(tf.keras.callbacks.Callback):
     fixed_recall=0.85,
     from_logits=False,
     dataset_transform_func=None,
-    batch_size=64,
+    batch_size=8,
     dual_head=None,
     counter = 0,
     *args,
