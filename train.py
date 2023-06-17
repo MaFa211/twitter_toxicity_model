@@ -96,7 +96,7 @@ class Trainer(object):
     project=...,
     experiment_id="default",
     gradient_clipping=None,
-    fold="time",
+    fold=2,
     seed=RANDOM_SEED,
     log_gradients=False,
     kw="",
