@@ -435,9 +435,10 @@ class Trainer(object):
     mini_batches, test_data, steps_per_epoch, val_data = self.mb_loader.simple_cv_load(df)
     print(f"steps per epoch: f{steps_per_epoch}")
 
-    self._train_single_fold(
+    model = self._train_single_fold(
       mb_generator=mini_batches, test_data=test_data, steps_per_epoch=steps_per_epoch, fold="full", val_data=val_data
     )
+    return model 
 
   def train(self):
     print("Setting up random seed.")
