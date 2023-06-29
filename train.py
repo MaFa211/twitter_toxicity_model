@@ -438,6 +438,8 @@ class Trainer(object):
     model = self._train_single_fold(
       mb_generator=mini_batches, test_data=test_data, steps_per_epoch=steps_per_epoch, fold="full", val_data=val_data
     )
+    print(type(model))
+    model.save_pretrained("model")
     return model 
 
   def train(self):
